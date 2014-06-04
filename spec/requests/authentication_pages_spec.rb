@@ -15,7 +15,7 @@ describe "Authentication" do
     before { visit signin_path }
 
     describe "with invalid information" do
-      before { click_button "Sign in" } 
+      before { click_button "Sign in" }
 
       it { should have_title('Sign in') }
       it { should have_error_message('Invalid') }
@@ -86,6 +86,19 @@ describe "Authentication" do
           it { should have_title('Sign in') } 
         end
       end
+
+      describe "in the Microposts controller" do
+
+        describe "submitting to the create action" do
+          before { post microposts_path }
+          specify { expect(response).to redirect_to(signin_path) }
+        end
+
+        describe "submitting to the destroy action" do
+          before { delete micropost_path(FactoryGirl.create(:micropost))}
+          specify { expect(response).to redirect_to(signin_path) }
+        end
+      end
     end
 
     describe "as wrong user" do
@@ -101,7 +114,7 @@ describe "Authentication" do
 
       describe "submitting a PATCH request to the Users#update action" do
         before { patch user_path(wrong_user) }
-        specify { expect(response).to redirect_to(root_path) }
+        specify { expect(response).to redirect_to(root_url) }
       end
     end
 
@@ -113,7 +126,7 @@ describe "Authentication" do
 
       describe "submitting a DELETE request to the Users#destroy action" do
         before { delete user_path(user) }
-        specify { expect(response).to redirect_to(root_path) }
+        specify { expect(response).to redirect_to(root_url) }
       end
     end
   end
